@@ -1,10 +1,6 @@
 # No need to explicitly write this on your .gitlab-ci.yml file.
 # Add and edit if you want different stage configurations.
 image: mjomaadocker/php:latest
-.change_file_permissions: &change_file_permissions |
-  find . -type f -not -path "./vendor/*" -exec chmod 664 {} \;    
-  find . -type d -not -path "./vendor/*" -exec chmod 775 {} \;
-    
 composer:
   stage: build
   cache:
