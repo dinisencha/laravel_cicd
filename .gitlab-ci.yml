@@ -3,7 +3,7 @@
 #image: mjomaadocker/php:latest
 # No need to explicitly write this on your .gitlab-ci.yml file.
 # Add and edit if you want different stage configurations.
-image: mjomaadocker/php:latest
+image: mjomaadocker/dev/php:latest
 variables:
 
   DOCKER_HOST: tcp://docker:2375
@@ -17,17 +17,17 @@ services:
 #before_script:
 #  - docker info
 stages:
-  - docker_build
+  - docker_build_dev
   - build
   - test
   - deploy
-docker_build:
+docker_build_dev:
   image: docker:20.10.16
   stage: docker_build
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build -t mjomaadocker/php:latest .
-    - docker push mjomaadocker/php:latest  
+    - docker build -t mjomaadocker/dev/php:latest .
+    - docker push mjomaadocker/dev/php:latest  
 #  only:
  #   changes:
  #   - Dockerfile  
@@ -64,16 +64,24 @@ npm:
       - public/css/
       - public/js/
 
-codestyle:
-  stage: test
-  dependencies: []
-  script:
-    - phpcs --standard=PSR2 --extensions=php --ignore=app/Support/helpers.php app
+#codestyle:
+ # stage: test
+ # dependencies: []
+ # script:
+  #  - phpcs --standard=PSR2 --extensions=php --ignore=app/Support/helpers.php app
     
-#phpunit:
-  #stage: test
-  #dependencies:
-   # - composer
-  #script:
-   # - phpunit --coverage-text --colors=never
+phpunit:
+  stage: test
+  dependencies:
+    - composer
+  script:
+    - phpunit --coverage-text --colors=never
 
+
+docker_build_prod:
+  image: docker:20.10.16
+  stage: deploy
+  script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+    - docker build -t mjomaadocker/prod/php:latest .
+    - docker push mjomaadocker/prod/php:latest  
