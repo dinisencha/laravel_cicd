@@ -52,6 +52,10 @@ RUN composer global require "squizlabs/php_codesniffer=*"
 RUN composer  update
 RUN mv .env.example .env
 RUN php artisan key:generate
+
+# Add local and global vendor bin to PATH.
+ENV PATH ./vendor/bin:/composer/vendor/bin:/root/.composer/vendor/bin:/usr/local/bin:$PATH
+
 # Change current user to www
 USER www
 
