@@ -14,8 +14,8 @@ variables:
 services:
   - docker:20.10.16-dind
 
-before_script:
-  - docker info
+#before_script:
+#  - docker info
 stages:
   - docker_build
   - build
@@ -26,7 +26,8 @@ docker_build:
   stage: docker_build
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build -t mjomaadocker/php:latest .
+    - docker build --cache-from mjomaadocker/php:latest  --tag jomaadocker/php:$CI_COMMIT_SHA -t mjomaadocker/php:latest .
+    - docker push mjomaadocker/php:$CI_COMMIT_SHA
     - docker push mjomaadocker/php:latest  
 composer:
   stage: build
