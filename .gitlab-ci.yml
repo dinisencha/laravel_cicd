@@ -22,8 +22,8 @@ docker_build_dev:
   stage: docker_build_dev
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build -t mjomaadocker/dev/php:latest .
-    - docker push mjomaadocker/dev/php:latest  
+    - docker build -t mjomaadocker/dev_php:latest .
+    - docker push mjomaadocker/dev_php:latest  
 #  only:
  #   changes:
  #   - Dockerfile  
@@ -79,5 +79,5 @@ docker_build_prod:
   stage: docker_build_prod
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build -t mjomaadocker/prod/php:latest .
-    - docker push mjomaadocker/prod/php:latest  
+    - docker build -t mjomaadocker/prod_php:latest .
+    - docker push mjomaadocker/prod_php:latest  
