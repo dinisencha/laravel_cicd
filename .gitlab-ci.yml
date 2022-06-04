@@ -1,8 +1,3 @@
-# No need to explicitly write this on your .gitlab-ci.yml file.
-# Add and edit if you want different stage configurations.
-#image: mjomaadocker/php:latest
-# No need to explicitly write this on your .gitlab-ci.yml file.
-# Add and edit if you want different stage configurations.
 image: mjomaadocker/dev/php:latest
 variables:
 
@@ -20,10 +15,11 @@ stages:
   - docker_build_dev
   - build
   - test
+  - docker_build_prod
   - deploy
 docker_build_dev:
   image: docker:20.10.16
-  stage: docker_build
+  stage: docker_build/dev
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/dev/php:latest .
@@ -80,7 +76,7 @@ phpunit:
 
 docker_build_prod:
   image: docker:20.10.16
-  stage: deploy
+  stage: docker_build_prod
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/prod/php:latest .
