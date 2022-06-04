@@ -49,9 +49,6 @@ COPY . /var/www
 COPY --chown=www:www . /var/www
 # Install PHP_CodeSniffer
 RUN composer global require "squizlabs/php_codesniffer=*"
-RUN composer  update
-RUN mv .env.example .env
-RUN php artisan key:generate
 # Change current user to www
 USER www
 
