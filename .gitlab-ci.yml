@@ -7,6 +7,12 @@ stages:
   - build
   - test
   - deploy
+docker_build:
+  stage: build
+  script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+    - docker build -t mjomaadocker/php:latest .
+    - docker push mjomaadocker/php:latest  
 composer:
   stage: build
   cache:
