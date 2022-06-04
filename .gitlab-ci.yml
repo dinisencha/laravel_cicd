@@ -1,6 +1,12 @@
 # No need to explicitly write this on your .gitlab-ci.yml file.
 # Add and edit if you want different stage configurations.
 image: mjomaadocker/php:latest
+# No need to explicitly write this on your .gitlab-ci.yml file.
+# Add and edit if you want different stage configurations.
+stages:
+  - build
+  - test
+  - deploy
 composer:
   stage: build
   cache:
