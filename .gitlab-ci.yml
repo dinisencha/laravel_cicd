@@ -56,7 +56,7 @@ npm:
       - node_modules/
   script:
       - npm install
-      - npm run production
+      - npm run development
   artifacts:
     expire_in: 1 month
     paths:
