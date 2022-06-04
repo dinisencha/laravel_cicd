@@ -17,12 +17,13 @@ services:
 before_script:
   - docker info
 stages:
+  - docker_build
   - build
   - test
   - deploy
 docker_build:
   image: docker:20.10.16
-  stage: build
+  stage: docker_build
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/php:latest .
