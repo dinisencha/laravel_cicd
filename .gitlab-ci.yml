@@ -1,8 +1,3 @@
+# No need to explicitly write this on your .gitlab-ci.yml file.
+# Add and edit if you want different stage configurations.
 image: mjomaadocker/php:latest
-
-stages:
-  - preparation
-  - building
-  - syntax
-  - testing
-  - deploy
