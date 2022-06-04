@@ -28,6 +28,9 @@ docker_build:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/php:latest .
     - docker push mjomaadocker/php:latest  
+  only:
+    changes:
+      - Dockerfile  
 composer:
   stage: build
   cache:
