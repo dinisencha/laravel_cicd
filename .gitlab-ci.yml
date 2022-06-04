@@ -1,0 +1,8 @@
+image: mjomaadocker/php:latest
+
+stages:
+  - preparation
+  - building
+  - syntax
+  - testing
+  - deploy
