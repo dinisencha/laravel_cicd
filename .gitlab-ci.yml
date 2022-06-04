@@ -28,17 +28,18 @@ docker_build:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/php:latest .
     - docker push mjomaadocker/php:latest  
-  only:
-    changes:
-      - Dockerfile  
+#  only:
+ #   changes:
+ #   - Dockerfile  
+  #    - "**/*.js"
 composer:
   stage: build
   cache:
     key: ${CI_COMMIT_REF_SLUG}-composer
     paths:
       - vendor/
-  script:
-      - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+  script:     
+      - composer update
       - cp .env.example .env
       - php artisan key:generate
   artifacts:
