@@ -19,7 +19,7 @@ stages:
   - deploy
 docker_build_dev:
   image: docker:20.10.16
-  stage: docker_build/dev
+  stage: docker_build_dev
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/dev/php:latest .
