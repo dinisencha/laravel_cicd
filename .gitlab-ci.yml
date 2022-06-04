@@ -1,4 +1,4 @@
-image: mjomaadocker/dev/php:latest
+image: mjomaadocker/dev_php:latest
 variables:
 
   DOCKER_HOST: tcp://docker:2375
