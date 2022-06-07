@@ -15,7 +15,7 @@ stages:
   - docker_build_dev
   - build
   - test
-  - docker_build_prod
+  - ECR_build_prod
   - deploy
 docker_build_dev:
   image: docker:20.10.16
@@ -73,11 +73,20 @@ phpunit:
   script:
     - phpunit --coverage-text --colors=never
 
-
-docker_build_prod:
-  image: docker:20.10.16
-  stage: docker_build_prod
+deploy:
+  stage: ECR_build_prod
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
-    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build -t mjomaadocker/prod_php:latest .
-    - docker push mjomaadocker/prod_php:latest  
+   - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 977254184182.dkr.ecr.us-east-2.amazonaws.com
+   - docker build -t mjomaaphp .
+   - docker tag mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+
+#docker_build_prod:
+ # image: docker:20.10.16
+  #stage: docker_build_prod
+  #script:
+  #  - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+   # - docker build -t mjomaadocker/prod_php:latest .
+    #- docker push mjomaadocker/prod_php:latest  
+
