@@ -23,7 +23,14 @@ docker_build_dev:
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/dev_php:latest .
-    - docker push mjomaadocker/dev_php:latest  
+    - docker push mjomaadocker/dev_php:latest 
+    - docker tag mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest 
+    - mkdir image
+    - docker save app > image/app.tar
+  artifacts:
+    paths:
+      - image
+   
 #  only:
  #   changes:
  #   - Dockerfile  
@@ -43,6 +50,8 @@ composer:
     paths:
       - vendor/
       - .env
+    exclude:
+      - image  
 
 npm:
   stage: build
@@ -55,6 +64,8 @@ npm:
       - npm run development
   artifacts:
     expire_in: 1 month
+    exclude:
+      - image 
     paths:
       - node_modules/
       - public/css/
@@ -73,14 +84,16 @@ phpunit:
   script:
     - phpunit --coverage-text --colors=never
 
+
 deploy:
   stage: ECR_build_prod
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
    - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 977254184182.dkr.ecr.us-east-2.amazonaws.com
-   - docker build -t mjomaaphp .
-   - docker tag mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
-   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+   #- docker build -t mjomaaphp .
+   #- docker tag mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+   - docker load -i image/app.tar
+   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest -d app
 
 #docker_build_prod:
  # image: docker:20.10.16
