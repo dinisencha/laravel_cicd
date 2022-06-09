@@ -98,9 +98,10 @@ deploy:
   script:
    - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 977254184182.dkr.ecr.us-east-2.amazonaws.com
    - docker build -t 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest .
+   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
    - docker image rm 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
    - docker load -i image/app.tar
-   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:new -d app
+   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:new 
 
 #docker_build_prod:
  # image: docker:20.10.16
