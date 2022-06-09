@@ -83,11 +83,17 @@ phpunit:
     - composer
   script:
     - phpunit --coverage-text --colors=never
+  artifacts:
+    exclude:
+      - "*"
 
 
 deploy:
   stage: ECR_build_prod
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  artifacts:
+    paths:
+      - image 
   script:
    - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 977254184182.dkr.ecr.us-east-2.amazonaws.com
    #- docker build -t mjomaaphp .
