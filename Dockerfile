@@ -33,7 +33,7 @@ RUN docker-php-ext-install mbstring pdo pdo_mysql \
 
 
 COPY --chown=www-data:www-data . /srv/app 
-RUN cp /srv/app/vhost.conf /etc/apache2/sites-available/000-default.conf 
+RUN cp /srv/app/vhost.conf /etc/apache2/sites-available/000-default.conf  && rm /srv/app/vhost.conf
 
 # Install PHP_CodeSniffer
 RUN composer global require "squizlabs/php_codesniffer=*"
