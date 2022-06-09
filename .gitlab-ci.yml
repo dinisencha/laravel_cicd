@@ -24,7 +24,7 @@ docker_build_dev:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t mjomaadocker/dev_php:latest .
     - docker push mjomaadocker/dev_php:latest 
-    - docker tag mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest 
+    - docker tag mjomaadocker/dev_php:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest 
     - mkdir image
     - docker save app > image/app.tar
   artifacts:
