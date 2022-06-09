@@ -34,7 +34,7 @@ deploy:
    - kubectl create secret docker-registry $AWS_K8_ECR_SECRET_NAME -n $AWS_k8_namespace \
           --docker-server=$AWS_ECR_REPOSITORY \
           --docker-username=AWS \
-          --docker-password= "${cat TOKEN}"" \
+          --docker-password= /${cat TOKEN} \
           --namespace=$AWS_k8_namespace || true
      
    - rm TOKEN   
