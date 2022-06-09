@@ -22,8 +22,8 @@ deploy:
     paths:
       - image
   script:
-   - echo 'TOKEN=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)' > deploy.env 
-   - echo $TOKEN
+   - aws ecr get-login-password --region $AWS_DEFAULT_REGION > TOKEN 
+   - cat TOKEN 
    - ls -al
    - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/kubectl
    - chmod +x ./kubectl
@@ -38,7 +38,7 @@ deploy:
         kubectl create secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME \
           --docker-server=$AWS_ECR_REPOSITORY \
           --docker-username=AWS \
-          --docker-password=$TOKEN \
+          --docker-password=${cat TOKEN} \
           --namespace=$AWS_k8_namespace
       else
           kubectl create secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME \
