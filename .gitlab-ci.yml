@@ -31,7 +31,7 @@ deploy:
    - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $AWS_K8_CLUSTER
    - kubectl apply -f EKS_K8/laravel_namespace.yaml
    - |
-     if [kubectl -n $AWS_k8_namespace get secret $AWS_K8_ECR_SECRET_NAME ]; then 
+     if [[kubectl -n $AWS_k8_namespace get secret $AWS_K8_ECR_SECRET_NAME ]]; then 
         kubectl delete secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME; \
         kubectl create secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME \
           --docker-server=$AWS_ECR_REPOSITORY \
