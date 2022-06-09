@@ -1,0 +1,48 @@
+#aws eks update-kubeconfig --region us-east-2  --name laravel-mjomaa-cluster
+#$TOKEN = aws ecr get-login-password 
+#kubectl create namespace laravel
+#kubectl create secret docker-registry regcred --docker-server=977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp --docker-username=AWS --docker-password=$TOKEN -n laravel
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel
+  labels:
+    app: laravel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel
+  template:
+    metadata:
+      namespace: laravel 
+      labels:
+        app: laravel
+    spec:
+      imagePullSecrets:
+        - name: regcred 
+      containers:
+      - name: laravel-app
+        image:  977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+        ports:
+        - containerPort: 80 
+        env:
+        - name: DB_HOST
+          value: localhost
+        - name: DB_DATABASE
+          value: laravel_aws_eks
+        - name: DB_USERNAME
+          value: app 
+        - name: DB_PASSWORD
+          value: password
+      - name: mysql
+        image: mysql:5 
+        env:
+        - name: MYSQL_DATABASE
+          value: laravel_aws_eks
+        - name: MYSQL_USER
+          value: app
+        - name: MYSQL_PASSWORD
+          value: password 
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
