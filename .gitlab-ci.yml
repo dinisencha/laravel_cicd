@@ -22,11 +22,11 @@ docker_build_dev:
   stage: docker_build_dev
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker build -t mjomaadocker/dev_php:latest .
-    - docker push mjomaadocker/dev_php:latest 
-    - docker tag mjomaadocker/dev_php:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest 
+    - docker build -t mjomaadocker/dev_php:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest .
     - mkdir image
     - docker save mjomaadocker/dev_php:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest  > image/app.tar
+    - docker tag 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest  mjomaadocker/dev_php:latest 
+    - docker push mjomaadocker/dev_php:latest 
   artifacts:
     paths:
       - image
@@ -53,31 +53,6 @@ composer:
     exclude:
       - image  
 
-npm:
-  stage: build
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-npm
-    paths:
-      - node_modules/
-  script:
-    - ls
-     # - npm install
-     #- npm run development
-  artifacts:
-    expire_in: 1 month
-    exclude:
-      - image 
-    paths:
-      - node_modules/
-      - public/css/
-      - public/js/
-
-#codestyle:
- # stage: test
- # dependencies: []
- # script:
-  #  - phpcs --standard=PSR2 --extensions=php --ignore=app/Support/helpers.php app
-    
 phpunit:
   stage: test
   dependencies:
@@ -88,7 +63,6 @@ phpunit:
     exclude:
       - "*"
 
-
 deploy:
   stage: ECR_build_prod
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
@@ -97,9 +71,9 @@ deploy:
       - image 
   script:
    - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 977254184182.dkr.ecr.us-east-2.amazonaws.com
-   - docker build -t 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest .
-   - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
-   - docker image rm 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+   #- docker build -t 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest .
+   #- docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+   #- docker image rm 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
    - docker load -i image/app.tar
    - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:new 
 
