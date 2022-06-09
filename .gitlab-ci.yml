@@ -21,8 +21,8 @@ deploy:
   artifacts:
     paths:
       - image
-  before_script:
-    - $TOKEN= aws ecr get-login-password --region $AWS_DEFAULT_REGION
+  variables:
+    TOKEN:  aws ecr get-login-password --region $AWS_DEFAULT_REGION
   script:
    - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/kubectl
    - chmod +x ./kubectl
