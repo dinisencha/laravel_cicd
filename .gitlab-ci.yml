@@ -60,8 +60,9 @@ npm:
     paths:
       - node_modules/
   script:
-      - npm install
-      - npm run development
+    - ls
+     # - npm install
+     #- npm run development
   artifacts:
     expire_in: 1 month
     exclude:
