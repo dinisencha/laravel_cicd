@@ -19,7 +19,7 @@ RUN apt-get update  &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get
     curl \
     dos2unix \
     supervisor \
-    nodejs \
+    nodejs 
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
