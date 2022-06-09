@@ -14,15 +14,68 @@ stages:
   - test
   - ECR_build_prod
   - deploy
+docker_build_dev:
+  image: docker:20.10.16
+  stage: docker_build_dev
+  script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+    - docker build -t ${AWS_ECR_REPOSITORY}:latest .
+    - mkdir image
+    - docker save ${AWS_ECR_REPOSITORY}:latest  > image/app.tar
+    - docker tag ${AWS_ECR_REPOSITORY}:latest  mjomaadocker/dev_php:latest 
+    - docker push mjomaadocker/dev_php:latest 
+  artifacts:
+    paths:
+      - image
 
-deploy:
+
+composer:
+  stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
+  script:     
+      - composer update
+      - cp .env.example .env
+      - php artisan key:generate
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - vendor/
+      - .env
+    exclude:
+      - image  
+
+
+
+phpunit:
+  stage: test
+  dependencies:
+    - composer
+  script:
+    - phpunit --coverage-text --colors=never
+  artifacts:
+    exclude:
+      - "*"
+ECR_build_prod:
   stage: ECR_build_prod
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   artifacts:
     paths:
       - image
   script:
-   - export TOKEN=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)    
+   - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ECR_REPOSITORY
+   - docker load -i image/app.tar
+   - docker push ${AWS_ECR_REPOSITORY}:latest  
+deploy:
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  artifacts:
+    exclude:
+      - "*"
+  script:
+   - export TOKEN=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)   
    - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/kubectl
    - chmod +x ./kubectl
    - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
@@ -35,5 +88,5 @@ deploy:
    - echo $TOKEN 
    - kubectl apply -f EKS_K8/deployment.yaml
    - kubectl apply -f EKS_K8/service.yaml  
-   
+      
 
