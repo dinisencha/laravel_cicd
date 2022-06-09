@@ -4,7 +4,7 @@ LABEL name=phpmjomaa
 # Copy composer.lock and composer.json
 COPY composer.lock composer.json /var/www/
 
-RUN apt-get update && apt-get install -y && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y\
+RUN apt-get update  &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y \
     build-essential \
     mysql-client \
     libpng-dev \
