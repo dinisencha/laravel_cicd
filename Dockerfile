@@ -2,7 +2,7 @@ FROM php:7.2-apache-stretch
 
 LABEL name=phpmjomaa
 # Copy composer.lock and composer.json
-COPY composer.lock composer.json /var/www/
+COPY composer.lock composer.json /srv/app 
 
 RUN apt-get update  &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y \
     build-essential \
@@ -36,8 +36,8 @@ COPY --chown=www-data:www-data . /srv/app
 RUN cp /srv/app/vhost.conf /etc/apache2/sites-available/000-default.conf  && rm /srv/app/vhost.conf
 
 # Install PHP_CodeSniffer
-RUN composer global require "squizlabs/php_codesniffer=*"
-RUN composer  update
+RUN composer global require "squizlabs/php_codesniffer=*" --working-dir=/srv/app
+RUN composer  update --working-dir=/srv/app
 RUN mv .env.example .env
 RUN php artisan key:generate
 
@@ -45,7 +45,7 @@ RUN php artisan key:generate
 # Add local and global vendor bin to PATH.
 ENV PATH ./vendor/bin:/composer/vendor/bin:/root/.composer/vendor/bin:/usr/local/bin:$PATH
 
-# Change current user to www
+# Change current user to www-data
 USER www-data
 
 WORKDIR /srv/app 
