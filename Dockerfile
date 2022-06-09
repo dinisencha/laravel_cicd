@@ -2,7 +2,7 @@ FROM php:7.2-apache-stretch
 
 LABEL name=phpmjomaa
 # Copy composer.lock and composer.json
-COPY composer.lock composer.json /srv/app 
+COPY composer.lock composer.json /srv/app/ 
 
 RUN apt-get update  &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y \
     build-essential \
