@@ -72,6 +72,7 @@ deploy:
   script:
    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ECR_REPOSITORY
    - docker load -i image/app.tar
+   - aws ecr batch-delete-image --repository-name=mjomaaphp  --image-ids imageTag=latest --region $AWS_DEFAULT_REGION 
    - docker push ${AWS_ECR_REPOSITORY}:latest 
    - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/kubectl
    - chmod +x ./kubectl
