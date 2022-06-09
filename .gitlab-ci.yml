@@ -12,7 +12,7 @@ stages:
   - docker_build_dev
   - build
   - test
-  - ECR_build_prod
+  - ECR_Push_prod
   - deploy
 docker_build_dev:
   image: docker:20.10.16
@@ -58,8 +58,8 @@ phpunit:
   artifacts:
     exclude:
       - "*"
-ECR_build_prod:
-  stage: ECR_build_prod
+ECR_Push_prod:
+  stage: ECR_Push_prod
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   artifacts:
     paths:
@@ -67,7 +67,10 @@ ECR_build_prod:
   script:
    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ECR_REPOSITORY
    - docker load -i image/app.tar
+   - aws ecr batch-delete-image --repository-name mjomaaphp --image-ids imageTag=latest --region $AWS_DEFAULT_REGION
    - docker push ${AWS_ECR_REPOSITORY}:latest  
+
+
 deploy:
   stage: deploy
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
@@ -88,5 +91,5 @@ deploy:
    - echo $TOKEN 
    - kubectl apply -f EKS_K8/deployment.yaml
    - kubectl apply -f EKS_K8/service.yaml  
-      
+   - kubectl patch deployment laravel -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
