@@ -68,7 +68,7 @@ deploy:
     paths:
       - image
   before_script:
-    - TOKEN = "aws ecr get-login-password --region $AWS_DEFAULT_REGION"
+    - $TOKEN = "aws ecr get-login-password --region $AWS_DEFAULT_REGION"
   script:
    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ECR_REPOSITORY
    - docker load -i image/app.tar
