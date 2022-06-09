@@ -32,13 +32,12 @@ deploy:
    - kubectl apply -f EKS_K8/laravel_namespace.yaml
    - kubectl delete secret  docker-registry $AWS_K8_ECR_SECRET_NAME -n $AWS_k8_namespace || true
    - kubectl create secret docker-registry $AWS_K8_ECR_SECRET_NAME -n $AWS_k8_namespace \
-          --docker-server=$AWS_ECR_REPOSITORY \
-          --docker-username=AWS \
-          --docker-password= {cat TOKEN} \
-          --namespace=$AWS_k8_namespace || true
-     
+     --docker-server=$AWS_ECR_REPOSITORY \
+     --docker-username=AWS \
+     --docker-password= {cat TOKEN} \
+     --namespace=$AWS_k8_namespace || true  
    - rm TOKEN   
-   - kubectl apply -f EKS_K8/deployment.yaml
-   - kubectl apply -f EKS_K8/service.yaml  
+   - kubectl apply -f EKS_K8/deployment.yaml -n $AWS_k8_namespace
+   - kubectl apply -f EKS_K8/service.yaml  -n $AWS_k8_namespace
    
 
