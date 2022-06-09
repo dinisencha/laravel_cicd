@@ -36,7 +36,7 @@ COPY --chown=www-data:www-data . /srv/app
 RUN cp /srv/app/vhost.conf /etc/apache2/sites-available/000-default.conf  && rm /srv/app/vhost.conf
 
 # Install PHP_CodeSniffer
-RUN composer global require "squizlabs/php_codesniffer=*" --working-dir=/srv/app
+#RUN composer global require "squizlabs/php_codesniffer=*" --working-dir=/srv/app
 RUN composer  update --working-dir=/srv/app
 RUN mv .env.example .env
 RUN php artisan key:generate
