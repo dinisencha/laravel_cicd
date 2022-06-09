@@ -31,7 +31,7 @@ deploy:
    - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $AWS_K8_CLUSTER
    - kubectl apply -f EKS_K8/laravel_namespace.yaml
    - kubectl delete secret  $AWS_K8_ECR_SECRET_NAME -n $AWS_k8_namespace || true
-   - kubectl create secret docker-registry  $AWS_K8_ECR_SECRET_NAME --docker-server= "$AWS_ECR_REPOSITORY" --docker-username=AWS --docker-password= {cat TOKEN} -n "$AWS_k8_namespace" || true 
+   - kubectl create secret docker-registry regcred --docker-server=977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp --docker-username=AWS --docker-password={cat TOKEN }  -n laravel || true
    - rm TOKEN   
    - kubectl apply -f EKS_K8/deployment.yaml
    - kubectl apply -f EKS_K8/service.yaml  
