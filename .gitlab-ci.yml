@@ -68,11 +68,10 @@ deploy:
     paths:
       - image
   before_script:
-    - $TOKEN = "aws ecr get-login-password --region $AWS_DEFAULT_REGION"
+    - TOKEN = "aws ecr get-login-password --region $AWS_DEFAULT_REGION"
   script:
    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ECR_REPOSITORY
    - docker load -i image/app.tar
-   - aws ecr batch-delete-image --repository-name=mjomaaphp  --image-ids imageTag=latest --region $AWS_DEFAULT_REGION 
    - docker push ${AWS_ECR_REPOSITORY}:latest 
    - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/kubectl
    - chmod +x ./kubectl
@@ -80,11 +79,23 @@ deploy:
    - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
    - kubectl version --short --client
    - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $AWS_K8_CLUSTER
-   - kubectl delete secret -n $AWS_k8_namespace --ignore-not-found $AWS_K8_ECR_SECRET_NAME
-   - kubectl create secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME \
-     --docker-server=$AWS_ECR_REPOSITORY \
-     --docker-username=AWS \
-     --docker-password=$TOKEN \
-     --namespace=$AWS_k8_namespace
+   - kubectl apply -f ./EKS_K8/laravel_namespace.yaml
+   - |
+     if [kubectl -n $AWS_k8_namespace get secret $AWS_K8_ECR_SECRET_NAME ]; then
+        kubectl delete secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME
+        kubectl create secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME \
+          --docker-server=$AWS_ECR_REPOSITORY \
+          --docker-username=AWS \
+          --docker-password=$TOKEN \
+          --namespace=$AWS_k8_namespace
+      else
+          kubectl create secret -n $AWS_k8_namespace docker-registry $AWS_K8_ECR_SECRET_NAME \
+          --docker-server=$AWS_ECR_REPOSITORY \
+          --docker-username=AWS \
+          --docker-password=$TOKEN \
+          --namespace=$AWS_k8_namespace      
+      fi    
+   - kubectl apply -f ./EKS_K8/deployment.yaml
+   - kubectl apply -f EKS_K8/service.yaml  
    
 
