@@ -1,14 +1,12 @@
-FROM php:7.2-fpm
+FROM php:7.2-apache-stretch
 
+LABEL name=phpmjomaa
 # Copy composer.lock and composer.json
 COPY composer.lock composer.json /var/www/
 
-# Set working directory
-WORKDIR /var/www
-
-# Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
+    mysql-client \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
@@ -19,46 +17,38 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    g++ \
-    gcc \
-    git \
-    libc-dev \
-    make \
+    dos2unix \
+    supervisor \
     nodejs \
     npm
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
-RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-RUN docker-php-ext-install gd
-
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN docker-php-ext-install mbstring pdo pdo_mysql \ 
+    && a2enmod rewrite negotiation \
+    && docker-php-ext-install opcache
 
-# Copy existing application directory contents
-COPY . /var/www
 
-# Copy existing application directory permissions
-COPY --chown=www:www . /var/www
+COPY --chown=www-data:www-data . /srv/app 
+COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf 
+
 # Install PHP_CodeSniffer
 RUN composer global require "squizlabs/php_codesniffer=*"
 RUN composer  update
 RUN mv .env.example .env
 RUN php artisan key:generate
 
+
 # Add local and global vendor bin to PATH.
 ENV PATH ./vendor/bin:/composer/vendor/bin:/root/.composer/vendor/bin:/usr/local/bin:$PATH
 
 # Change current user to www
-USER www
+USER www-data
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+WORKDIR /srv/app 
+
+
