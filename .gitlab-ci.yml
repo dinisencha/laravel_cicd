@@ -26,7 +26,7 @@ docker_build_dev:
     - docker push mjomaadocker/dev_php:latest 
     - docker tag mjomaadocker/dev_php:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest 
     - mkdir image
-    - docker save app > image/app.tar
+    - docker save mjomaadocker/dev_php:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest  > image/app.tar
   artifacts:
     paths:
       - image
@@ -97,8 +97,8 @@ deploy:
       - image 
   script:
    - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 977254184182.dkr.ecr.us-east-2.amazonaws.com
-   #- docker build -t mjomaaphp .
-   #- docker tag mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
+   - docker build -t mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest .
+   - docker image rm mjomaaphp:latest 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
    - docker load -i image/app.tar
    - docker push 977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest -d app
 
