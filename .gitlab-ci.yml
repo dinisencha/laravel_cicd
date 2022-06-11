@@ -108,6 +108,6 @@ deploy:
    - echo $TOKEN 
    - kubectl apply -f EKS_K8/deployment.yaml -n $AWS_k8_namespace 
    - kubectl apply -f EKS_K8/service.yaml   -n $AWS_k8_namespace 
-   - kubectl patch deployment laravel -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" -n $AWS_k8_namespace 
+   - kubectl kubectl rollout restart laravel -n $AWS_k8_namespace 
 
 #------------------------------------------  
