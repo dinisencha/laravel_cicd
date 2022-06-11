@@ -38,7 +38,7 @@ RUN cp /srv/app/vhost.conf /etc/apache2/sites-available/000-default.conf  && rm 
 # Install PHP_CodeSniffer
 #RUN composer global require "squizlabs/php_codesniffer=*" --working-dir=/srv/app
 RUN composer  update --working-dir=/srv/app
-RUN cp .env.example .env
+RUN cp '.env.example' '.env'
 RUN php artisan key:generate
 
 
