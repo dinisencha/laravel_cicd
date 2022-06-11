@@ -24,10 +24,6 @@ spec:
       containers:
       - name: laravel-app
         image:  977254184182.dkr.ecr.us-east-2.amazonaws.com/mjomaaphp:latest
-        command:
-          - "composer  update --working-dir=/srv/app"
-          - "mv .env.example .env"
-          - "php artisan key:generate"
         ports:
         - containerPort: 80 
         env:
