@@ -40,7 +40,8 @@ composer:
     key: ${CI_COMMIT_REF_SLUG}-composer
     paths:
       - vendor/
-  script:     
+  script: 
+      - pwd    
       - composer update
       - cp .env.example .env
       - php artisan key:generate
