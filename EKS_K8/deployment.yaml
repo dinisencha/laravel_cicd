@@ -34,19 +34,19 @@ spec:
         - name: DB_HOST
           value: localhost
         - name: DB_DATABASE
-          value: laravel_aws_eks
+          value: homestead
         - name: DB_USERNAME
-          value: app 
+          value: homestead 
         - name: DB_PASSWORD
-          value: password
+          value: secret
       - name: mysql
         image: mysql:5 
         env:
         - name: MYSQL_DATABASE
-          value: laravel_aws_eks
+          value: homestead
         - name: MYSQL_USER
-          value: app
+          value: homestead
         - name: MYSQL_PASSWORD
-          value: password 
+          value: secret 
         - name: MYSQL_ROOT_PASSWORD
-          value: password
+          value: secret
