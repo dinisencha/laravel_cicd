@@ -37,8 +37,10 @@ RUN cp /srv/app/vhost.conf /etc/apache2/sites-available/000-default.conf  && rm 
 
 # Install PHP_CodeSniffer
 #RUN composer global require "squizlabs/php_codesniffer=*" --working-dir=/srv/app
-RUN composer  update --working-dir=/srv/app
-RUN mv .env.example .env
+
+WORKDIR /srv/app 
+RUN composer  update 
+RUN cp .env.example .env
 RUN php artisan key:generate
 
 
@@ -47,7 +49,3 @@ ENV PATH ./vendor/bin:/composer/vendor/bin:/root/.composer/vendor/bin:/usr/local
 
 # Change current user to www-data
 USER www-data
-
-WORKDIR /srv/app 
-
-
