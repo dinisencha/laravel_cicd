@@ -42,7 +42,7 @@ composer:
       - vendor/
   script:     
       - composer update
-  #    - cp .env.example .env
+      - cp .env.example .env
       - php artisan key:generate
   artifacts:
     expire_in: 1 month
