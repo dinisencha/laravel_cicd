@@ -109,6 +109,6 @@ deploy:
    - echo $TOKEN 
    - kubectl apply -f EKS_K8/deployment.yaml -n $AWS_k8_namespace 
    - kubectl apply -f EKS_K8/service.yaml   -n $AWS_k8_namespace 
-   - kubectl rollout restart laravel -n $AWS_k8_namespace 
+   - kubectl rollout restart laravel -n $AWS_k8_namespace || true
 
 #------------------------------------------  
