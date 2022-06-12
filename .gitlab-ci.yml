@@ -23,6 +23,8 @@ docker_build_dev:
   stage: docker_build_dev
   script:
     - echo $DOCKER_REGISTRY_PASSWORD >> ~/pass.txt
+    - echo $DOCKER_REGISTRY_PASSWORD 
+    - echo $DOCKER_REGISTRY_USER
     - cat ~/pass.txt | docker login --username $DOCKER_REGISTRY_USER --password-stdin
     - docker build -t ${AWS_ECR_REPOSITORY}:latest .
     - mkdir image
