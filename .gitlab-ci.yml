@@ -22,10 +22,7 @@ docker_build_dev:
   image: docker:20.10.16
   stage: docker_build_dev
   script:
-    - echo $DOCKER_REGISTRY_PASSWORD >> ~/pass.txt
-    - echo $DOCKER_REGISTRY_PASSWORD 
-    - echo $DOCKER_REGISTRY_USER
-    - cat ~/pass.txt | docker login --username $DOCKER_REGISTRY_USER --password-stdin
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker build -t ${AWS_ECR_REPOSITORY}:latest .
     - mkdir image
     - docker save ${AWS_ECR_REPOSITORY}:latest  > image/app.tar
