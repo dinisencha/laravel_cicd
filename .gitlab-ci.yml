@@ -75,6 +75,8 @@ phpunit:
 #      
 ECR_Push_prod:
   stage: ECR_Push_prod
+  only:
+  - master
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   # in registry.gitlab.com/gitlab-org/cloud-deploy/aws-base you should  define 
   #  AWS_ACCESS_KEY_ID , AWS_DEFAULT_REGION, AWS_SECRET_ACCESS_KEY Variables in seetings--> CICD --> Variables
@@ -91,6 +93,8 @@ ECR_Push_prod:
 
 deploy:
   stage: deploy
+  only:
+  - master
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   artifacts:
     exclude:
@@ -109,6 +113,6 @@ deploy:
    - echo $TOKEN 
    - kubectl apply -f EKS_K8/deployment.yaml -n $AWS_k8_namespace 
    - kubectl apply -f EKS_K8/service.yaml   -n $AWS_k8_namespace 
-   - kubectl rollout restart laravel -n $AWS_k8_namespace || true
+   - kubectl rollout restart deployment laravel -n $AWS_k8_namespace 
 
 #------------------------------------------  
