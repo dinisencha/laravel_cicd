@@ -1,8 +1,12 @@
-# Sample GitLab Project
+**Build Laravel Pipeline using Gitlab CICD & Docker, AWS ECR, EKS**
 
-This sample project shows how a project in GitLab looks for demonstration purposes. It contains issues, merge requests and Markdown files in many branches,
-named and filled with lorem ipsum.
+**Building full Pipeline in GitLab CI-CD for deploying a dockerized Laravel application on AWS EKS**
 
-You can look around to get an idea how to structure your project and, when done, you can safely delete this project.
 
-[Learn more about creating GitLab projects.](https://docs.gitlab.com/ee/gitlab-basics/create-project.html)
+To read the full article:
+
+https://medium.com/@jomaajob/b1a7da08a43e
+
+
+https://www.youtube.com/watch?v=awrjQk2FkXI
+
