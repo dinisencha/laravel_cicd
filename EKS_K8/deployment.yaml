@@ -1,6 +1,5 @@
 #aws eks update-kubeconfig --region us-east-2  --name laravel-mjomaa-cluster
 #$TOKEN = aws ecr get-login-password
-#kubectl create namespace laravel
 apiVersion: apps/v1
 kind: Deployment
 metadata:
